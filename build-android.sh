@@ -22,6 +22,7 @@ PREFIX=""
 OS="${OSTYPE//[0-9.]/}-$(uname -m)"
 CONFIG=""
 VARIANT=""
+ICONV_PATH=""
 
 # If environment variables didn't do the trick, attempt to detect if
 # ndk-build is available and see where it is.
@@ -44,12 +45,13 @@ Usage: $0
   -p PREFIX                   Where to build.
   -o OS                       Host OS ($OS)
   -c CONFIG                   Force specific config to be used (e.g. r9b_64)
+  -I ICONV_PATH               Use separate libiconv for locale
   -v VARIANT                  'debug' or 'release'
   -h                          Show help.
 USAGE
 }
 
-while getopts ":a:b:n:t:i:e:p:o:c:v:h?" opt; do
+while getopts ":a:b:n:t:i:I:e:p:o:c:v:h?" opt; do
   case $opt in
     a)
       ABI="$OPTARG"
@@ -65,6 +67,9 @@ while getopts ":a:b:n:t:i:e:p:o:c:v:h?" opt; do
       ;;
     i)
       LIBRARIES="$LIBRARIES --with-$OPTARG"
+      ;;
+    I)
+      ICONV_PATH="$OPTARG"
       ;;
     e)
       LIBRARIES="$LIBRARIES --without-$OPTARG"
@@ -204,6 +209,7 @@ echo "-----> Compiling ..."
 export PATH="$TOOLCHAIN_PATH/bin:$PATH"
 export NDK_ROOT
 export NO_BZIP2=1
+[ ! -z "$ICONV_PATH" ] && ICONV_PATH="-sICONV_PATH=\"$ICONV_PATH\""
 
 (cd "$BOOST_DIR" && ./bjam -q                      \
   target-os=linux              \
@@ -212,9 +218,12 @@ export NO_BZIP2=1
   threading=multi              \
   --layout=versioned           \
   --prefix="${PREFIX}"         \
-  $LIBRARIES                   \
-  $VARIANT                     \
-  $EXTRA_OPTIONS               \
+  ${LIBRARIES}                 \
+  ${VARIANT}                   \
+  boost.locale.posix=off       \
+  boost.locale.std=on          \
+  ${ICONV_PATH}                \
+  ${EXTRA_OPTIONS}             \
   install 2>&1 ) | tee -a build.log
 
 echo "=====> Build completed, artifacts available at:"

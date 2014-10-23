@@ -41,21 +41,18 @@ import os ;
 local NDK_ROOT = [ os.environ NDK_ROOT ] ;
 
 # --------------------------------------------------------------------
-using gcc : armeabi_v7a
+using gcc : x86
 :
-arm-linux-androideabi-g++
+i686-linux-android-g++
 :
-<archiver>arm-linux-androideabi-ar
+<archiver>i686-linux-android-ar
 <compileflags>-fexceptions
 <compileflags>-frtti
 <compileflags>-fpic
 <compileflags>-ffunction-sections
 <compileflags>-funwind-tables
 <compileflags>-Wno-pedantic
-<compileflags>-march=armv7-a
-<compileflags>-mtune=xscale
 <compileflags>-msoft-float
-<compileflags>-mthumb
 <compileflags>-O2
 <compileflags>-Os
 <compileflags>-g
@@ -63,20 +60,19 @@ arm-linux-androideabi-g++
 <compileflags>-fomit-frame-pointer
 <compileflags>-fno-strict-aliasing
 <compileflags>-I$(NDK_ROOT)/sources/cxx-stl/gnu-libstdc++/4.8/include
-<compileflags>-I$(NDK_ROOT)/sources/cxx-stl/gnu-libstdc++/4.8/libs/armeabi-v7a/include
+<compileflags>-I$(NDK_ROOT)/sources/cxx-stl/gnu-libstdc++/4.8/libs/x86/include
 <compileflags>-I$(NDK_ROOT)/sources/cxx-stl/gnu-libstdc++/4.8/include/backward
-<compileflags>--sysroot=$(NDK_ROOT)/platforms/android-14/arch-arm
+<compileflags>--sysroot=$(NDK_ROOT)/platforms/android-14/arch-x86
 <compileflags>-DANDROID
 <compileflags>-D__ANDROID__
 <compileflags>-Wa,--noexecstack
 <cxxflags>-std=c++11
-<linkflags>--sysroot=$(NDK_ROOT)/platforms/android-14/arch-arm
+<linkflags>--sysroot=$(NDK_ROOT)/platforms/android-14/arch-x86
 # @Moss - Above are the 'oficial' android flags
-<architecture>arm
+<architecture>x86
 <compileflags>-fvisibility=hidden
 <compileflags>-fvisibility-inlines-hidden
 <compileflags>-fdata-sections
-<cxxflags>-D__arm__
 <cxxflags>-D_REENTRANT
 <cxxflags>-D_GLIBCXX__PTHREADS
 <cxxflags>-D_BOOST_SYSTEM_NO_DEPRECATED
